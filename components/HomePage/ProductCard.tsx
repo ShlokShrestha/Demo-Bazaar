@@ -1,20 +1,14 @@
 import { Product } from "@/types/type";
 import Image from "next/image";
+import Link from "next/link";
 
-const ProductCard = async ({ page }: { page: number }) => {
-  const limit = 12;
-  const skip = (page - 1) * limit;
-  const res = await fetch(
-    `https://dummyjson.com/products?limit=${limit}&skip=${skip}`,
-    { cache: "no-store" }
-  );
-  const data = await res.json();
-
+const ProductCard = async ({ productList }: { productList: Product[] }) => {
   return (
     <div className="p-4">
       <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
-        {data.products.map((item: Product) => (
-          <div
+        {productList.map((item: Product) => (
+          <Link
+            href={`/productdetail/${item.id}`}
             key={item.id}
             className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition duration-200"
           >
@@ -22,8 +16,9 @@ const ProductCard = async ({ page }: { page: number }) => {
               <Image
                 src={item.thumbnail}
                 alt={item.title}
-                fill
-                className="object-cover"
+                width={100}
+                height={100}
+                className="w-full h-full"
               />
             </div>
 
@@ -52,7 +47,7 @@ const ProductCard = async ({ page }: { page: number }) => {
                 )}
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
