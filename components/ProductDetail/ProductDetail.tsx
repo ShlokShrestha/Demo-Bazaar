@@ -1,5 +1,6 @@
 import { Product } from "@/types/type";
 import Image from "next/image";
+import AddToCart from "./AddToCart";
 
 type Props = {
   product: Product;
@@ -85,17 +86,7 @@ const ProductDetail = async (props: Props) => {
           </div>
 
           {/* Purchase Actions */}
-          <div className="mt-6 flex flex-col sm:flex-row gap-4 items-start">
-            <input
-              type="number"
-              min={product.minimumOrderQuantity}
-              defaultValue={product.minimumOrderQuantity}
-              className="w-20 border rounded px-2 py-1"
-            />
-            <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-              Add to Cart
-            </button>
-          </div>
+          <AddToCart product={product} />
         </div>
       </div>
     </div>
