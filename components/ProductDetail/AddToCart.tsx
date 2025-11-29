@@ -1,6 +1,7 @@
 "use client";
 import { useProductStore } from "@/Store/store";
 import { Product } from "@/types/type";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface AddToCartProps {
@@ -8,6 +9,7 @@ interface AddToCartProps {
 }
 
 const AddToCart = ({ product }: AddToCartProps) => {
+  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
 
   const addToCart = useProductStore((state) => state.addToCart);
@@ -20,9 +22,8 @@ const AddToCart = ({ product }: AddToCartProps) => {
       price: product.price,
     };
     addToCart(itemList);
+    router.push("/");
   };
-  const cartList = useProductStore((state) => state.products);
-  console.log(cartList);
   return (
     <div className="mt-6 flex flex-col sm:flex-row gap-4 items-start">
       <div className="flex items-center gap-3">

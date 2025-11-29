@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type productInCart = {
+export type ProductInCart = {
   id: number;
   title: string;
   image: string;
@@ -10,11 +10,14 @@ export type productInCart = {
 };
 
 export type Store = {
-  products: productInCart[];
+  products: ProductInCart[];
 };
 
 export type Actions = {
-  addToCart: (newProduct: productInCart) => void;
+  addToCart: (newProduct: ProductInCart) => void;
+  removeFromCart: (productId: number) => void;
+  incrementProduct: (productId: number) => void;
+  decrementProduct: (productId: number) => void;
   clearCart: () => void;
 };
 
@@ -25,11 +28,11 @@ export const useProductStore = create<Store & Actions>()(
       addToCart: (newProduct) =>
         set((state) => {
           const existanceProduct = state.products.find(
-            (item: productInCart) => item.id === newProduct.id
+            (item: ProductInCart) => item.id === newProduct.id
           );
           if (existanceProduct) {
             return {
-              products: state.products.map((item: productInCart) =>
+              products: state.products.map((item: ProductInCart) =>
                 item.id == newProduct.id
                   ? { ...item, quantity: item.quantity + newProduct.quantity }
                   : item
@@ -38,6 +41,34 @@ export const useProductStore = create<Store & Actions>()(
           } else {
             return { products: [...state.products, newProduct] };
           }
+        }),
+      removeFromCart: (productId) =>
+        set((state) => {
+          return {
+            products: state.products.filter(
+              (item: ProductInCart) => item.id !== productId
+            ),
+          };
+        }),
+      incrementProduct: (productId) =>
+        set((state) => {
+          return {
+            products: state.products.map((item: ProductInCart) =>
+              item.id === productId
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            ),
+          };
+        }),
+      decrementProduct: (productId) =>
+        set((state) => {
+          return {
+            products: state.products.map((item: ProductInCart) =>
+              item.id === productId
+                ? { ...item, quantity: item.quantity - 1 }
+                : item
+            ),
+          };
         }),
       clearCart: () =>
         set(() => {
