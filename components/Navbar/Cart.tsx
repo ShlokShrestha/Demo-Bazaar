@@ -1,5 +1,5 @@
 "use client";
-import { useProductStore } from "@/store/store";
+import { useProductStore } from "@/Store/store";
 import { useState, useEffect, useRef } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 
