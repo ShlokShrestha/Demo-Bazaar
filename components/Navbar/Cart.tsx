@@ -32,11 +32,11 @@ const Cart = () => {
   return (
     <main className="relative" ref={cartRef}>
       <button
-        className="relative cursor-pointer pr-4"
+        className="relative cursor-pointer pr-4 pt-2"
         onClick={() => setOpenCart((prev) => !prev)}
       >
         <FaShoppingCart size={20} />
-        <span className="absolute -top-2 -right-1 bg-white text-black h-6 w-6 rounded-full text-center font-semibold">
+        <span className="absolute -top-1 -right-1 bg-white text-black h-6 w-6 rounded-full text-center font-semibold">
           {cartList.length}
         </span>
       </button>
