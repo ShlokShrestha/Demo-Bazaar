@@ -1,5 +1,5 @@
 "use client";
-import { useProductStore } from "@/Store/store";
+import { useProductStore } from "@/store/store";
 import { Product } from "@/types/type";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
