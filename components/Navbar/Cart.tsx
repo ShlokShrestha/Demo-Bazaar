@@ -1,5 +1,6 @@
 "use client";
 import { useProductStore } from "@/Store/store";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 
@@ -12,10 +13,7 @@ const Cart = () => {
   const decrementProduct = useProductStore((state) => state.decrementProduct);
   const removeFromCart = useProductStore((state) => state.removeFromCart);
 
-  const totalPrice = cartList.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const totalPrice = useProductStore((state) => state.getTotalPrice());
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -87,8 +85,16 @@ const Cart = () => {
             </ul>
           )}
           {cartList.length > 0 && (
-            <div className="mt-4 font-bold">Total: ${totalPrice}</div>
+            <div className="my-4 font-bold">Total: ${Number(totalPrice)}</div>
           )}
+          <div className="text-center">
+            <Link
+              href="/checkout"
+              className="font-medium bg-blue-700 py-2 px-4 rounded text-white"
+            >
+              Go to Checkout
+            </Link>
+          </div>
         </section>
       )}
     </main>

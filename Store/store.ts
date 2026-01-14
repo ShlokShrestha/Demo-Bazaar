@@ -19,11 +19,12 @@ export type Actions = {
   incrementProduct: (productId: number) => void;
   decrementProduct: (productId: number) => void;
   clearCart: () => void;
+  getTotalPrice: () => number;
 };
 
 export const useProductStore = create<Store & Actions>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       products: [],
       addToCart: (newProduct) =>
         set((state) => {
@@ -74,6 +75,11 @@ export const useProductStore = create<Store & Actions>()(
         set(() => {
           return { products: [] };
         }),
+      getTotalPrice: () =>
+        get().products.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        ),
     }),
     { name: "cartList" }
   )
