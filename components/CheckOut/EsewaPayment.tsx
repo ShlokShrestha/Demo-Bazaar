@@ -1,3 +1,4 @@
+"use client";
 import { useProductStore } from "@/Store/store";
 import React from "react";
 import { FaCreditCard } from "react-icons/fa";
@@ -13,21 +14,32 @@ const EsewaPayment = ({ totalPrice, productList, userId }: Props) => {
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
-    // const res = await fetch("/api/payment/initiate-payment", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     method: "esewa",
-    //     amount: totalPrice,
-    //     productItems: productList,
-    //     userId,
-    //   }),
-    // });
-    // const data = await res.json();
-    // if (data.khaltiPaymentUrl) {
-    //   clearCart();
-    //   window.location.href = data.khaltiPaymentUrl;
-    // }
+    const res = await fetch("/api/payment/initiate-payment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        method: "esewa",
+        amount: totalPrice,
+        productItems: productList,
+        userId,
+      }),
+    });
+    const data = await res.json();
+    console.log(data);
+    if (data.esewaConfig) {
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
+      Object.entries(data.esewaConfig).forEach(([k, v]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = String(v);
+        form.appendChild(input);
+      });
+      document.body.appendChild(form);
+      form.submit();
+    }
   };
 
   return (

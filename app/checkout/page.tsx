@@ -7,7 +7,6 @@ import { useProductStore } from "@/Store/store";
 
 const CheckoutPage = () => {
   const { user } = useUser();
-  console.log(user);
   const [active, setActive] = useState<"esewa" | "khalti">("esewa");
   const totalPrice = useProductStore((state) => state.getTotalPrice());
   const productList = useProductStore((state) => state.products);

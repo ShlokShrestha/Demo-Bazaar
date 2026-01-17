@@ -31,7 +31,7 @@ model PurchasedItem {
   items         Json
   totalPrice    Float
   transactionId String?        @unique
-  userId        String         @unique
+  userId        String
   purchaseDate  DateTime       @default(now())
   paymentMethod PaymentMethod
   status        PurchaseStatus @default(PENDING)

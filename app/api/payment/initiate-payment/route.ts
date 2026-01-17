@@ -1,3 +1,4 @@
+import { generateEsewaSignature } from "@/lib/generateEsewaSigntaure";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -60,8 +61,29 @@ export async function POST(req: NextRequest) {
           data: { transactionId: data.pidx },
         });
         return NextResponse.json({ khaltiPaymentUrl: data.payment_url });
+      case "esewa":
+        const esewaConfig = {
+          failure_url: `${process.env.NEXT_PUBLIC_BASE_URL}/error`,
+          product_delivery_charge: "0",
+          product_service_charge: "0",
+          product_code: process.env.NEXT_PUBLIC_ESEWA_MERCHANT_CODE,
+          signed_field_names: "total_amount,transaction_uuid,product_code",
+          success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/verify`,
+          tax_amount: 0,
+          total_amount: amount,
+          amount: amount,
+          transaction_uuid: purchase.id,
+        };
+        const signatureString = `total_amount=${esewaConfig.total_amount},transaction_uuid=${esewaConfig.transaction_uuid},product_code=${esewaConfig.product_code}`;
+        const signature = generateEsewaSignature(signatureString);
+        return NextResponse.json({
+          esewaConfig: { ...esewaConfig, signature },
+        });
       default:
-        break;
+        return NextResponse.json(
+          { error: "Invalid payment method" },
+          { status: 400 }
+        );
     }
   } catch (err) {
     return NextResponse.json(
