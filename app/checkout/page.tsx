@@ -14,7 +14,6 @@ const CheckoutPage = () => {
   return (
     <div className="flex justify-center py-10">
       <div className="w-full max-w-4xl">
-        {/* Tab selector */}
         <div className="bg-white border rounded-xl shadow-sm p-2 flex w-full max-w-md mx-auto mb-8 ">
           <button
             onClick={() => setActive("esewa")}
@@ -44,7 +43,13 @@ const CheckoutPage = () => {
               Complete Your Payment
             </h2>
             <div className="h-px bg-gray-200 mb-4" />
-            {active === "esewa" && <EsewaPayment />}
+            {active === "esewa" && (
+              <EsewaPayment
+                totalPrice={totalPrice}
+                productList={productList}
+                userId={user?.id}
+              />
+            )}
             {active === "khalti" && (
               <KhaltiPayment
                 totalPrice={totalPrice}
