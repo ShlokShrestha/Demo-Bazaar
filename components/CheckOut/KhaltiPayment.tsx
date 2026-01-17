@@ -11,7 +11,7 @@ const KhaltiPayment = ({ totalPrice }: Props) => {
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch("/api/initiate-payment", {
+    const res = await fetch("/api/payment/initiate-payment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

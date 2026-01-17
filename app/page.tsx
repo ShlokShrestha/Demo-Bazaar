@@ -1,6 +1,5 @@
 import ProductCard from "@/components/HomePage/ProductCard";
 import Link from "next/link";
-import { Suspense } from "react";
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 export default async function Home({
