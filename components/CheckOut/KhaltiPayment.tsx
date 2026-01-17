@@ -1,67 +1,58 @@
-import React, { useState } from "react";
+import { useProductStore } from "@/Store/store";
+import React from "react";
+import { FaCreditCard } from "react-icons/fa";
 
 type Props = {
   totalPrice: number;
+  productList: any;
+  userId: string | undefined;
 };
 
-const KhaltiPayment = ({ totalPrice }: Props) => {
-  const [productName, setProductName] = useState("Test Product");
-  const [transactionId, setTransactionId] = useState("txn-456");
+const KhaltiPayment = ({ totalPrice, productList, userId }: Props) => {
+  const clearCart = useProductStore((state) => state.clearCart);
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const res = await fetch("/api/payment/initiate-payment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         method: "khalti",
         amount: totalPrice,
-        productName,
-        transactionId,
+        productItems: productList,
+        userId,
       }),
     });
     const data = await res.json();
     if (data.khaltiPaymentUrl) {
-      console.log(data);
+      clearCart();
       window.location.href = data.khaltiPaymentUrl;
     }
   };
+
   return (
-    <div>
+    <div className="max-w-md mx-auto bg-white ">
+      <div className="flex items-center justify-between bg-purple-50 p-4 rounded-lg mb-5">
+        <div className="flex items-center gap-3">
+          <FaCreditCard className="text-purple-600 text-2xl" />
+          <div>
+            <p className="text-gray-500 text-sm">Total Amount</p>
+            <p className="text-lg font-medium text-gray-800">Rs {totalPrice}</p>
+          </div>
+        </div>
+      </div>
       <form onSubmit={handlePayment}>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-600">Amount: {totalPrice}</label>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-600">Product Name</label>
-          <input
-            type="text"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
-            placeholder="Enter product name"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-600">Transaction ID</label>
-          <input
-            type="text"
-            value={transactionId}
-            onChange={(e) => setTransactionId(e.target.value)}
-            placeholder="Enter transaction ID"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-          />
-        </div>
-
         <button
           type="submit"
-          className="w-full mt-2 bg-purple-600 hover:bg-purple-700 text-white font-medium py-2.5 rounded-lg transition duration-200 cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 bg-linear-to-r from-purple-600 to-purple-400 hover:from-purple-700 hover:to-purple-500 text-white font-semibold py-3 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 cursor-pointer"
         >
+          <FaCreditCard />
           Pay with Khalti
         </button>
       </form>
+      <p className="mt-4 text-xs text-gray-400 text-center">
+        Secure payment powered by Khalti
+      </p>
     </div>
   );
 };

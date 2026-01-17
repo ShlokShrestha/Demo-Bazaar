@@ -22,12 +22,16 @@ enum PurchaseStatus {
   PENDING
   COMPLETED
   REFUNDED
+  FAILED
+  EXPIRED
 }
 
 model PurchasedItem {
   id            String         @id @default(uuid())
-  itemId        String
+  items         Json
   totalPrice    Float
+  transactionId String?        @unique
+  userId        String         @unique
   purchaseDate  DateTime       @default(now())
   paymentMethod PaymentMethod
   status        PurchaseStatus @default(PENDING)
