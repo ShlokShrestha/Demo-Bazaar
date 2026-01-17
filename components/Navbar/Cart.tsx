@@ -85,7 +85,7 @@ const Cart = () => {
             </ul>
           )}
           {cartList.length > 0 && (
-            <div className="my-4 font-bold">Total: ${Number(totalPrice)}</div>
+            <div className="my-4 font-bold">Total: Rs{Number(totalPrice)}</div>
           )}
           <div className="text-center">
             <Link

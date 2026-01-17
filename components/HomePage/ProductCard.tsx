@@ -33,7 +33,7 @@ const ProductCard = async ({ productList }: { productList: Product[] }) => {
               <div className="mt-2">
                 <div className="flex items-center justify-between">
                   <span className="text-blue-600 font-bold text-lg">
-                    ${item.price.toFixed(2)}
+                    Rs{item.price.toFixed(2)}
                   </span>
                   <span className="text-yellow-500">
                     {"★".repeat(Math.round(item.rating)) +

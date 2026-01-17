@@ -31,7 +31,7 @@ const ProductDetail = async (props: Props) => {
 
             <div className="flex items-center mt-4 gap-4">
               <span className="text-2xl font-bold text-blue-600">
-                ${product.price.toFixed(2)}
+                Rs{product.price.toFixed(2)}
               </span>
               {product.discountPercentage > 0 && (
                 <span className="text-red-500 font-semibold">
