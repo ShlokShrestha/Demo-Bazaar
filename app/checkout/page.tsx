@@ -12,11 +12,8 @@ const CheckoutPage = () => {
   const totalPrice = useProductStore((state) => state.getTotalPrice());
   const productList = useProductStore((state) => state.products);
   return (
-    <div className="min-h-screen flex justify-center py-10">
+    <div className="flex justify-center py-10">
       <div className="w-full max-w-4xl">
-        {/* Title */}
-        <h1 className="text-2xl font-semibold text-center mb-6">Checkout</h1>
-
         {/* Tab selector */}
         <div className="bg-white border rounded-xl shadow-sm p-2 flex w-full max-w-md mx-auto mb-8 ">
           <button
@@ -115,7 +112,7 @@ const CheckoutPage = () => {
 
                   <ul className="space-y-3 text-gray-700 text-sm">
                     <li className="bg-purple-50 p-3 rounded-lg shadow-sm">
-                      <span className="font-medium">Test IDs:</span>{" "}
+                      <span className="font-medium">Khalti IDs:</span>{" "}
                       <span className="font-semibold text-purple-600">
                         9800000000, 9800000001, 9800000002, 9800000003,
                         9800000004, 9800000005
