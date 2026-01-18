@@ -1,4 +1,4 @@
-import { generateEsewaSignature } from "@/lib/generateEsewaSigntaure";
+import { generateSigntaure } from "@/lib/generateSigntaure";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -68,14 +68,14 @@ export async function POST(req: NextRequest) {
           product_service_charge: "0",
           product_code: process.env.NEXT_PUBLIC_ESEWA_MERCHANT_CODE,
           signed_field_names: "total_amount,transaction_uuid,product_code",
-          success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/verify`,
+          success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/verify`,
           tax_amount: 0,
           total_amount: amount,
           amount: amount,
           transaction_uuid: purchase.id,
         };
         const signatureString = `total_amount=${esewaConfig.total_amount},transaction_uuid=${esewaConfig.transaction_uuid},product_code=${esewaConfig.product_code}`;
-        const signature = generateEsewaSignature(signatureString);
+        const signature = generateSigntaure(signatureString);
         return NextResponse.json({
           esewaConfig: { ...esewaConfig, signature },
         });
