@@ -25,7 +25,6 @@ const EsewaPayment = ({ totalPrice, productList, userId }: Props) => {
       }),
     });
     const data = await res.json();
-    console.log(data);
     if (data.esewaConfig) {
       const form = document.createElement("form");
       form.method = "POST";
