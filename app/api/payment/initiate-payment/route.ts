@@ -1,18 +1,40 @@
-import { generateSigntaure } from "@/lib/generateSigntaure";
-import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { z } from "zod";
+import { generateSignature } from "@/lib/generateSignature";
+
+const paymentSchema = z.object({
+  amount: z.number().positive(),
+  method: z.enum(["khalti", "esewa"]),
+  userId: z.string().min(1),
+  productItems: z
+    .array(
+      z.object({
+        id: z.number(),
+        title: z.string(),
+        quantity: z.number().int().positive(),
+        price: z.number().positive(),
+      }),
+    )
+    .min(1),
+});
 
 export async function POST(req: NextRequest) {
   try {
-    const { amount, method, productItems, userId } = await req.json();
-    if (!amount || !productItems || !method || !userId) {
-      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    const body = await req.json();
+    const parsed = paymentSchema.safeParse({
+      ...body,
+      amount: Number(body.amount),
+    });
+    console.log(parsed);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid request", issues: parsed.error.flatten() },
+        { status: 400 },
+      );
     }
-    const productName = productItems
-      .map(
-        (item: any) => `${item.id}:${item.title}:${item.quantity}:${item.price}`
-      )
-      .join(",");
+    const { amount, method, productItems, userId } = parsed.data;
+
     const purchase = await prisma.purchasedItem.create({
       data: {
         items: productItems,
@@ -21,74 +43,82 @@ export async function POST(req: NextRequest) {
         userId,
       },
     });
-    if (!purchase) {
-      return NextResponse.json(
-        { error: "Failed to create purchase item" },
-        { status: 500 }
-      );
-    }
+
     switch (method) {
-      case "khalti":
-        const khaltiConfig = {
-          return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/verify/`,
-          website_url: process.env.NEXT_PUBLIC_BASE_URL!,
-          amount: Math.round(parseFloat(amount) * 100),
+      case "khalti": {
+        const khaltiPayload = {
+          return_url: `${process.env.BASE_URL}/api/payment/verify`,
+          website_url: process.env.BASE_URL!,
+          amount: Math.round(amount * 100),
           purchase_order_id: purchase.id,
-          purchase_order_name: productName,
+          purchase_order_name: `Order-${purchase.id}`,
         };
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_KHALTI_URL}/epayment/initiate/`,
+          `${process.env.KHALTI_URL}/epayment/initiate/`,
           {
             method: "POST",
             headers: {
-              Authorization: `Key ${process.env.NEXT_PUBLIC_KHALTI_SECRET_KEY}`,
+              Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(khaltiConfig),
-          }
+            body: JSON.stringify(khaltiPayload),
+          },
         );
         if (!response.ok) {
+          await prisma.purchasedItem.update({
+            where: { id: purchase.id },
+            data: { status: "FAILED" },
+          });
           return NextResponse.json(
             { error: "Khalti initiation failed" },
-            { status: 500 }
+            { status: 500 },
           );
         }
         const data = await response.json();
         await prisma.purchasedItem.update({
-          where: {
-            id: purchase.id,
+          where: { id: purchase.id },
+          data: {
+            transactionId: data.pidx,
           },
-          data: { transactionId: data.pidx },
         });
-        return NextResponse.json({ khaltiPaymentUrl: data.payment_url });
-      case "esewa":
+        return NextResponse.json({
+          paymentUrl: data.payment_url,
+        });
+      }
+
+      case "esewa": {
         const esewaConfig = {
-          failure_url: `${process.env.NEXT_PUBLIC_BASE_URL}/error`,
+          success_url: `${process.env.BASE_URL}/api/payment/verify`,
+          failure_url: `${process.env.BASE_URL}/payment/error`,
           product_delivery_charge: "0",
           product_service_charge: "0",
-          product_code: process.env.NEXT_PUBLIC_ESEWA_MERCHANT_CODE,
-          signed_field_names: "total_amount,transaction_uuid,product_code",
-          success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/verify`,
           tax_amount: 0,
           total_amount: amount,
           amount: amount,
           transaction_uuid: purchase.id,
+          product_code: process.env.ESEWA_MERCHANT_CODE!,
+          signed_field_names: "total_amount,transaction_uuid,product_code",
         };
         const signatureString = `total_amount=${esewaConfig.total_amount},transaction_uuid=${esewaConfig.transaction_uuid},product_code=${esewaConfig.product_code}`;
-        const signature = generateSigntaure(signatureString);
+        const signature = generateSignature(signatureString);
         return NextResponse.json({
-          esewaConfig: { ...esewaConfig, signature },
+          esewaConfig: {
+            ...esewaConfig,
+            signature,
+          },
         });
+      }
       default:
         return NextResponse.json(
-          { error: "Invalid payment method" },
-          { status: 400 }
+          { error: "Unsupported payment method" },
+          { status: 400 },
         );
     }
-  } catch (err) {
+  } catch (error) {
+    console.error("Payment Init Error:", error);
     return NextResponse.json(
-      { error: "Server error", details: String(err) },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
