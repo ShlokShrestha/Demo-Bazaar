@@ -13,7 +13,10 @@ const Cart = () => {
   const decrementProduct = useProductStore((state) => state.decrementProduct);
   const removeFromCart = useProductStore((state) => state.removeFromCart);
 
-  const totalPrice = useProductStore((state) => state.getTotalPrice());
+  const totalPrice = cartList.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  );
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {

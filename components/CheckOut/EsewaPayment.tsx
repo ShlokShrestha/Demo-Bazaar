@@ -5,11 +5,11 @@ import { FaCreditCard } from "react-icons/fa";
 
 type Props = {
   totalPrice: number;
-  productList: any;
+  cartList: any;
   userId: string | undefined;
 };
 
-const EsewaPayment = ({ totalPrice, productList, userId }: Props) => {
+const EsewaPayment = ({ totalPrice, cartList, userId }: Props) => {
   const clearCart = useProductStore((state) => state.clearCart);
 
   const handlePayment = async (e: React.FormEvent) => {
@@ -20,12 +20,13 @@ const EsewaPayment = ({ totalPrice, productList, userId }: Props) => {
       body: JSON.stringify({
         method: "esewa",
         amount: totalPrice,
-        productItems: productList,
+        productItems: cartList,
         userId,
       }),
     });
     const data = await res.json();
     if (data.esewaConfig) {
+      clearCart();
       const form = document.createElement("form");
       form.method = "POST";
       form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";

@@ -19,24 +19,23 @@ export type Actions = {
   incrementProduct: (productId: number) => void;
   decrementProduct: (productId: number) => void;
   clearCart: () => void;
-  getTotalPrice: () => number;
 };
 
 export const useProductStore = create<Store & Actions>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       products: [],
       addToCart: (newProduct) =>
         set((state) => {
           const existanceProduct = state.products.find(
-            (item: ProductInCart) => item.id === newProduct.id
+            (item: ProductInCart) => item.id === newProduct.id,
           );
           if (existanceProduct) {
             return {
               products: state.products.map((item: ProductInCart) =>
                 item.id == newProduct.id
                   ? { ...item, quantity: item.quantity + newProduct.quantity }
-                  : item
+                  : item,
               ),
             };
           } else {
@@ -47,7 +46,7 @@ export const useProductStore = create<Store & Actions>()(
         set((state) => {
           return {
             products: state.products.filter(
-              (item: ProductInCart) => item.id !== productId
+              (item: ProductInCart) => item.id !== productId,
             ),
           };
         }),
@@ -57,7 +56,7 @@ export const useProductStore = create<Store & Actions>()(
             products: state.products.map((item: ProductInCart) =>
               item.id === productId
                 ? { ...item, quantity: item.quantity + 1 }
-                : item
+                : item,
             ),
           };
         }),
@@ -67,7 +66,7 @@ export const useProductStore = create<Store & Actions>()(
             products: state.products.map((item: ProductInCart) =>
               item.id === productId
                 ? { ...item, quantity: item.quantity - 1 }
-                : item
+                : item,
             ),
           };
         }),
@@ -75,12 +74,7 @@ export const useProductStore = create<Store & Actions>()(
         set(() => {
           return { products: [] };
         }),
-      getTotalPrice: () =>
-        get().products.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0
-        ),
     }),
-    { name: "cartList" }
-  )
+    { name: "cartList" },
+  ),
 );

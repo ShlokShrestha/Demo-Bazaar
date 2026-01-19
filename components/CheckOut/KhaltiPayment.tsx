@@ -4,11 +4,11 @@ import { FaCreditCard } from "react-icons/fa";
 
 type Props = {
   totalPrice: number;
-  productList: any;
+  cartList: any;
   userId: string | undefined;
 };
 
-const KhaltiPayment = ({ totalPrice, productList, userId }: Props) => {
+const KhaltiPayment = ({ totalPrice, cartList, userId }: Props) => {
   const clearCart = useProductStore((state) => state.clearCart);
 
   const handlePayment = async (e: React.FormEvent) => {
@@ -19,7 +19,7 @@ const KhaltiPayment = ({ totalPrice, productList, userId }: Props) => {
       body: JSON.stringify({
         method: "khalti",
         amount: totalPrice,
-        productItems: productList,
+        productItems: cartList,
         userId,
       }),
     });
