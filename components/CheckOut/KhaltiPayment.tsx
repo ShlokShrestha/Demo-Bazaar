@@ -24,9 +24,9 @@ const KhaltiPayment = ({ totalPrice, cartList, userId }: Props) => {
       }),
     });
     const data = await res.json();
-    if (data.khaltiPaymentUrl) {
+    if (data.paymentUrl) {
       clearCart();
-      window.location.href = data.khaltiPaymentUrl;
+      window.location.href = data.paymentUrl;
     }
   };
 

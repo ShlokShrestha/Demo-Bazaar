@@ -4,7 +4,6 @@ import { useUser } from "@clerk/nextjs";
 
 const CheckOutPage = () => {
   const { user } = useUser();
-
   return (
     <>
       <Checkout userId={user?.id} />
