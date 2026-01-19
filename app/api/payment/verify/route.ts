@@ -27,6 +27,9 @@ export async function GET(req: NextRequest) {
         );
       }
       const data = await response.json();
+      if (data.status !== "Completed") {
+        throw { message: "Invalid Info" };
+      }
       const prismaStatus = paymentStatus(data.status);
       await prisma.purchasedItem.update({
         where: {
