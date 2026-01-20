@@ -191,7 +191,7 @@
     "@clerk/shared" "^3.43.0"
     tslib "2.8.1"
 
-"@clerk/nextjs@^6.35.5":
+"@clerk/nextjs@^6.36.8":
   version "6.36.8"
   resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-6.36.8.tgz#0740c68dbe5e2882612f7635834870a87cb1d201"
   integrity sha512-Hipw/B/AqdkkcrLPVfVOW47YT+Nt8PwYzpxQv0iMWezdP9u4RWkQ0OfrhluvC7eSOLk/YCCljjaP+S4+VPfHig==
@@ -1293,6 +1293,11 @@ baseline-browser-mapping@^2.9.0:
   version "2.9.15"
   resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.9.15.tgz#6baaa0069883f50a99cdb31b56646491f47c05d7"
   integrity sha512-kX8h7K2srmDyYnXRIppo4AH/wYgzWVCs+eKr3RusRSQ5PvRYoEFmR/I0PbdTjKFAoKqp5+kbxnNTFO9jOfSVJg==
+
+baseline-browser-mapping@^2.9.16:
+  version "2.9.16"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.9.16.tgz#da1e893fd13aa6e8b6349b64b06399a0644c14b5"
+  integrity sha512-KeUZdBuxngy825i8xvzaK1Ncnkx0tBmb3k8DkEuqjKRkmtvNTjey2ZsNeh8Dw4lfKvbCOu9oeNx2TKm2vHqcRw==
 
 brace-expansion@^1.1.7:
   version "1.1.12"
