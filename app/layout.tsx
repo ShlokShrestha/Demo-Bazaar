@@ -15,8 +15,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Demo Bazaar",
-  description: "Demo Bazaar",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  ),
+  title: {
+    default: "Demo Bazaar",
+    template: "%s - Demo Bazaar",
+  },
+  description:
+    "Learn about Bazaar, a demo eCommerce marketplace built with Next.js. Discover our mission, features, and modern online shopping experience.",
 };
 
 export default function RootLayout({

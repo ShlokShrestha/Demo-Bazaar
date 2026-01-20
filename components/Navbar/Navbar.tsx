@@ -6,9 +6,10 @@ import UserProfile from "./UserProfile";
 const Navbar = () => {
   return (
     <nav className="p-4 bg-gray-800 text-white flex justify-between items-center sticky top-0 z-10">
-      <Link href={"/"} className="font-bold text-xl">
+      <Link href="/" className="font-bold text-xl">
         Demo Bazaar
       </Link>
+      <Link href="/about">About</Link>
       <div className="flex gap-4 items-center">
         <UserProfile />
         <Cart />
