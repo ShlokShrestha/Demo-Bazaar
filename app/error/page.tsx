@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const PaymentError = () => {
+const PaymentErrorPage = () => {
   return (
     <div className="h-[80vh] flex items-center justify-center bg-gray-50 ">
       <div className="max-w-md w-full text-center">
@@ -42,4 +42,4 @@ const PaymentError = () => {
   );
 };
 
-export default PaymentError;
+export default PaymentErrorPage;

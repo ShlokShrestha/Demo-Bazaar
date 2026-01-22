@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const Success = () => {
+const PaymentSuccessPage = () => {
   return (
     <div className="h-[80vh] flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full text-center">
@@ -48,4 +48,4 @@ const Success = () => {
   );
 };
 
-export default Success;
+export default PaymentSuccessPage;
