@@ -10,6 +10,7 @@ const UserProfile = () => {
         <div className="flex gap-2">
           <p>Hello, {user.firstName}</p>
           <UserButton />
+          <Link href="/orders">My Orders</Link>
         </div>
       ) : (
         <Link href="/sign-in">Login</Link>
