@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
+  let userId = req.cookies.get("userId")?.value;
   const search = searchParams.get("search");
   const page = parseInt(searchParams.get("page") || "1");
   const pageSize = parseInt(searchParams.get("pageSize") || "10");
-  const { isAuthenticated } = await auth();
-  if (!isAuthenticated) {
+  if (!userId) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
-  const user = await currentUser();
   try {
-    const where: any = { userId: user?.id };
+    const where: any = { userId };
     if (search) {
       where.description = { contains: search, mode: "insensitive" };
     }
