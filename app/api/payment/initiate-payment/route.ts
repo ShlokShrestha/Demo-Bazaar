@@ -26,7 +26,6 @@ export async function POST(req: NextRequest) {
       ...body,
       amount: Number(body.amount),
     });
-    console.log(parsed);
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid request", issues: parsed.error.flatten() },
