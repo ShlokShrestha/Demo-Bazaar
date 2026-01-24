@@ -1,6 +1,5 @@
-import Table from "@/components/Table";
+import OrderTable from "@/components/OrderTable";
 import { currentUser } from "@clerk/nextjs/server";
-import { cookies } from "next/headers";
 type OrderPageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
@@ -16,17 +15,17 @@ const OrderPage = async ({ searchParams }: OrderPageProps) => {
       headers: {
         cookie: `userId=${user?.id}`,
       },
+      cache: "no-store",
     },
   );
   if (!response.ok) {
     throw new Error(`Failed to fetch orders: ${response.status}`);
   }
   const orderData = await response.json();
-  console.log(orderData);
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 mx-auto">
       <h1 className="text-2xl font-bold mb-4">Orders</h1>
-      <Table />
+      <OrderTable orderData={orderData} />
     </div>
   );
 };
